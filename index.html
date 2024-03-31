@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlacoMaster - Calculateur de Matériaux pour Plaquer des Murs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222222; /* Gris foncé */
+            color: #ffffff; /* Blanc */
+        }
+        .container {
+            padding: 20px;
+
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            background-color: #333333; /* Gris foncé */
+            border: none;
+            color: #ffffff; /* Blanc */
+        }
+        button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PlacoMaster</h1>
+		<h2>Calculateur de Matériaux pour Plaquer des Murs</h2>
+        <form id="calculator">
+            <label for="length">Longueur du mur (m) :</label>
+            <input type="number" id="length" required>
+            <label for="height">Hauteur du mur (m) :</label>
+            <input type="number" id="height" required>
+            <button type="button" onclick="calculateMaterials()">Calculer</button>
+        </form>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function calculateMaterials() {
+            var length = parseFloat(document.getElementById("length").value);
+            var height = parseFloat(document.getElementById("height").value);
+            var surface = length * height;
+            var placoPerSheet = 3; // Nombre de mètres carrés par plaque de plâtre
+            var visPerSheet = 36; // Nombre de vis par plaque de plâtre
+            var railsPerWall = 2; // Nombre de rails par mur (sol et plafond)
+            var studsPerMeter = 1; // Nombre de montants par mètre
+            var railLength = 3; // Longueur d'un rail (en mètres)
+            var studInterval = 0.6; // Espacement entre les montants (en mètres)
+            var visPerBox = [30, 300, 1000]; // Nombre de vis par boîte
+            var jointTapePerSquareMeter = 1 / 100; // Nombre de rouleaux de bande à joint par mètre carré
+            var jointCompoundPerSquareMeter = 1 / 50; // Nombre de sacs d'enduit par mètre carré
+
+            var placoSheetsNeeded = Math.ceil(surface / placoPerSheet);
+            var visNeeded = placoSheetsNeeded * visPerSheet;
+            var railsNeeded = Math.ceil(length / railLength) * railsPerWall; // Nombre de rails (sol et plafond)
+            var studsNeeded = Math.ceil((length / studInterval) - 1) + 2; // 1 montant à chaque extrémité + un tous les 60 cm
+            var jointTapeNeeded = Math.ceil(surface * jointTapePerSquareMeter); // Nombre de rouleaux de bande à joint nécessaires
+            var jointCompoundNeeded = Math.ceil(surface * jointCompoundPerSquareMeter); // Nombre de sacs d'enduit nécessaires
+
+            var results = "<h2>Résultats :</h2>";
+            results += "<p>Nombre de plaques de plâtre nécessaires : " + placoSheetsNeeded + "</p>";
+            results += "<p>Nombre de vis nécessaires : " + visNeeded + "</p>";
+            results += "<p>Nombre de rails nécessaires : " + railsNeeded + "</p>";
+            results += "<p>Nombre de montants nécessaires : " + studsNeeded + "</p>";
+            results += "<p>Nombre de rouleaux de bande à joint nécessaires : " + jointTapeNeeded + "</p>";
+            results += "<p>Nombre de sacs d'enduit nécessaires : " + jointCompoundNeeded + "</p>";
+
+            if (height > 2.5) {
+                results += "<p class='warning'>Utiliser des montants supérieurs à 2.5 m</p>";
+            }
+
+            document.getElementById("results").innerHTML = results;
+        }
+    </script>
+</body>
+</html>
